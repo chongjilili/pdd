@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script type="text/javascript" src="../js/jquery-2.1.4.js" ></script>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/template-web.js" ></script>
+		<script type="text/javascript" src="../js/mytool.js" ></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<script type="text/javascript">
+        !function(J){function H(){var d=E.getBoundingClientRect().width;var e=(d/7.5>100*B?100*B:(d/7.5<42?42:d/7.5));E.style.fontSize=e+"px",J.rem=e}var G,F=J.document,E=F.documentElement,D=F.querySelector('meta[name="viewport"]'),B=0,A=0;if(D){var y=D.getAttribute("content").match(/initial\-scale=([\d\.]+)/);y&&(A=parseFloat(y[1]),B=parseInt(1/A))}if(!B&&!A){var u=(J.navigator.appVersion.match(/android/gi),J.navigator.appVersion.match(/iphone/gi)),t=J.devicePixelRatio;B=u?t>=3&&(!B||B>=3)?3:t>=2&&(!B||B>=2)?2:1:1,A=1/B}if(E.setAttribute("data-dpr",B),!D){if(D=F.createElement("meta"),D.setAttribute("name","viewport"),D.setAttribute("content","initial-scale="+A+", maximum-scale="+A+", minimum-scale="+A+", user-scalable=no"),E.firstElementChild){E.firstElementChild.appendChild(D)}else{var s=F.createElement("div");s.appendChild(D),F.write(s.innerHTML)}}J.addEventListener("resize",function(){clearTimeout(G),G=setTimeout(H,300)},!1),J.addEventListener("pageshow",function(b){b.persisted&&(clearTimeout(G),G=setTimeout(H,300))},!1),H()}(window);
+        if (typeof(M) == 'undefined' || !M){
+            window.M = {};
+        }
+   	    </script>
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+				
+				margin: 0;
+			}
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #fefefe;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+			    color: #e02e24!important;
+			    border-bottom: 2px solid #e02e24!important;
+			   
+			}
+			 
+		</style>
+	</head>
+	<script type="text/javascript">
+	 
+			var datajson = getAssignDataJson(netconfig.netname+"app");//后台的数据json
+			var datajson = $.extend({}, datajson, netconfig);//合并参数
+			console.log(datajson);
+	 
+	</script>
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background-color: #e02e24;">
+			 
+			<h1 class="mui-title" style="color: #FFFFFF;font-family: '微软雅黑';">拼多多</h1>
+		</header>
+		<div class="mui-content">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl"
+					 class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted"
+					 style="height: 40px;">
+					<div class="mui-scroll" id="categoryscroll">
+						
+						<!--<a class="mui-control-item" href="#item2mobile">
+							热点
+						</a>-->
+						
+						<script id="categorylsit" type="text/html">
+							<a class="mui-control-item mui-active" href="#item1mobile">
+							首页
+							</a>
+							{{each categorylist cat cati}}
+							<a class="mui-control-item" href="#item{{cati+2}}mobile">
+								{{cat.category_name}}
+							</a>
+							{{/each}}
+							
+						</script>
+						<script>
+							 
+								var html = template('categorylsit', datajson);
+								document.getElementById('categoryscroll').innerHTML = html;
+							 
+	
+						</script>
+						
+						 
+						
+					</div>
+				</div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div  class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="scroll1">
+								 <!--首页first-->
+								 
+	
+							 
+								 
+								 
+							</div>
+	<script type="text/html" id="index">			  
+	<!--图片轮播-->
+	<div id="sliderimg" class="mui-slider" >
+		
+	  <div class="mui-slider-group mui-slider-loop">
+	  	
+	  	
+	  	
+	    <div class="mui-slider-item mui-slider-item-duplicate">
+	       <img src="{{netname}}{{plat_adv_list.adv_list[plat_adv_list.adv_list.length-1].adv_image}}">  
+	    </div>
+	    
+	    
+	   {{each plat_adv_list.adv_list slider si }}
+	    <div class="mui-slider-item">
+	    	
+	     <img src="{{netname}}{{slider.adv_image}}">  
+	    </div>
+	   {{/each}} 
+	    
+	    
+	    <div class="mui-slider-item mui-slider-item-duplicate">
+	       <img src="{{netname}}{{plat_adv_list.adv_list[0].adv_image}}">  
+	    </div>
+	  </div>
+	  
+	  <div class="mui-slider-indicator">
+	    <div class="mui-indicator mui-active"></div>
+	    <div class="mui-indicator"></div>
+	    <div class="mui-indicator"></div>
+	    <div class="mui-indicator"></div>
+	  </div>
+	  
+	</div>
+	
+	<!--入口导航-->
+	<ul class="nav">
+		<li>
+			<a href="">
+				<img src="../images/super_spike.png" />
+				<p>限时秒杀</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/nav.jpg" />
+				<p>超值大牌</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/special99.png" />
+				<p>9块9特卖</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/subjects.png" />
+				<p>母婴童装</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/entry_lux.png" />
+				<p>爱轻奢</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/subjects (2).png" />
+				<p>爱逛街</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/subject_502.png" />
+				<p>品质水果</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/furniture_v2.png" />
+				<p>居家优品</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/food.png" />
+				<p>美食汇</p>
+			</a>
+		</li>
+		<li>
+			<a href="">
+				<img src="../images/charge.png" />
+				<p>手机充值</p>
+			</a>
+		</li>
+	</ul>
+	<!--提示消息-->
+	<div class="message">
+		<a href="">
+			<div class="message-img fl"><img src="../images/t2.jpg" /></div>
+			<div class="message-text fr">北京的江南风格 1秒前开团了 ></div>
+		</a>
+	</div>
+	<div class="advantage">
+		<a href=""><img src="../images/active_banner.png"/></a>
+	</div>
+
+	 
+	 
+	<!--开团列表-->
+	<ul class="groups" id="groups" >
+				 {{each goodslist.data good key}}
+				 
+							 
+							<li  goodid="good.goods_id" >
+								<a    href="detail.html?goodsid={{good.goods_id}} "  >
+									<div class="groups-img"><img  src="{{netname}}{{good.pic_cover_mid}}" /></div>
+									<h2 class="groups-title">{{good.goods_name}}</h2>
+									<div class="groups-detail">
+										<div class="groups-detail-left fl">
+											<div class="price fl"><i>￥</i>{{good.group_price}}</div>
+											<div class="des fr">已团100万件</div>
+										</div>
+										<div class="groups-detail-right fr">
+											<div class="group-local fl">
+												<div class="avatar fr"><img src="../images/t1.jpg" /></div>
+												<div class="avatar fr"><img src="../images/t2.jpg" /></div>
+											</div>
+											<div class="group-btn fr">
+												<a href="">去开团 ></a>
+											</div>
+										</div>
+									</div>
+								</a>
+							</li>
+						 
+						{{/each}}
+						
+						
+	</ul>
+	</script>
+	<script type="text/javascript">
+		$(function(){
+			var html = template('index', datajson);
+//			console.log(html);
+			document.getElementById('scroll1').innerHTML = html;
+			hrefclick();
+		})
+		
+	</script>
+						</div>
+					</div>
+					
+					
+					
+					
+					
+					<script type="text/html" id="productsubboxs">
+							<!--产品页面-->
+						 {{each categorylist cat cati}}
+						
+						<div id="item{{cati+2}}mobile" class="mui-slider-item mui-control-content">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll" id="scrollp{{cati+1}}">
+									 <!--内容-->
+								</div>
+							</div>
+						</div>
+						
+						
+						{{/each}}
+					</script>
+					
+					<script type="text/javascript">
+							var html = template('productsubboxs', datajson);
+//							document.getElementById('scroll1').innerHTML = html;
+							$('#item1mobile').after(html);
+							hrefclick();
+					</script>
+					
+					
+					
+					 
+					 <script id="productsub" type="text/html">
+											 	<div id="app">
+							 
+						  
+								 
+							  
+							  
+							  <!--入口导航-->
+											<ul class="catnav">
+												
+												
+												  
+												  	{{each catlist cat key}}
+												  	 
+												  		{{if key < 7}}
+														<li>
+															<a href="category.html?category_id={{cat.category_id}} "  >
+																<img  src="{{netname}}{{cat.category_pic}}" />
+																<p>{{cat.category_name}}</p>
+															</a>
+														</li>
+													 
+													{{/if}}
+													 {{/each}}
+											 	 
+												<li>
+													<a  href="category.html?category_id={{category_id}}"  >
+														<img src="../images/more.jpg" />
+														<!--<span class="mui-icon   mui-icon-more"></span>-->
+														<p>查看全部</p>
+													</a>
+												</li>
+											
+											</ul>
+							  
+							  
+							  
+							 <div class="mui-content like">
+								    
+								    
+								    
+								    <div class="mui-row progroups"  >
+								        
+								       
+								         	 {{each goodslist.data good i}}
+								        <div class="mui-col-sm-6 mui-col-xs-6">
+								            <li class="mui-table-view-cell">
+								                <a class="mui-navigate-right" href="detail.html?goodsid={{good.goods_id}}">
+								                     <div class="like-img"><img  src="{{netname}}{{good.pic_cover_mid}}"/></div>
+								                     <h2 class="like-text">{{good.goods_name}}</h2>
+								                     <div class="like-price">
+								                     	<span class="fl">¥{{good.group_price}}</span>
+								                     	<!--<em class="fl">2小时前</em>-->
+								                     	
+								                     </div>
+								                </a>
+								            </li>
+								        </div>
+								        
+								         {{/each}}
+								        
+								         
+								        
+							 
+								        
+								    </div>
+								    
+								    
+								    
+								    
+								     
+								     
+								     
+							 
+									</div>
+							<!--底部导航-->
+							 
+							 
+						  
+						  
+						    </div>
+					 	
+					 	
+					 </script>
+					 
+					 
+					 
+					 
+					 
+					  
+					 
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.pullToRefresh.js"></script>
+		<script src="../js/mui.pullToRefresh.material.js"></script>
+		<script>
+			mui.init();
+			$(function() {
+				
+				/*
+				 *
+				 * 加载页面数据，通过传入的分类id
+				 * @param category_id 分类id
+				 * @param slideNumber slide的数字
+				 * */
+				function putProductDataByCatid(category_id,slideNumber){
+					var pro_datajson = getAssignDataJson(netconfig.netname+"app/goods/goodslist",{
+										category_id: category_id ,
+									 
+									});
+									console.log(pro_datajson);
+									var pro_datajson = $.extend({}, pro_datajson, netconfig);
+									var html = template('productsub', pro_datajson);
+
+									document.getElementById('scrollp'+slideNumber).innerHTML = html;
+									hrefclick('#scrollp'+slideNumber);
+				}
+				
+				
+				
+				
+				
+				
+				//阻尼系数
+				var deceleration = mui.os.ios?0.003:0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: false, //是否显示滚动条
+					deceleration:deceleration
+				});
+				mui.ready(function() {
+					
+					
+					
+					
+					
+					
+					
+					 /*
+						  *监听页面加载
+						  * 
+						  * */
+						var itemshows = new Array(datajson.categorylist.length);//子选项卡是否显示标志
+						for ( is in itemshows) {
+							itemshows[is]=false;
+						}
+						document.querySelector('.mui-slider').addEventListener('slide', function(event) {
+						  //监听滑动的事件
+						 if( event.detail.slideNumber > 0 && !itemshows[event.detail.slideNumber-1]){
+						 	//还没有激活的页面
+//						 			alert(event.detail.slideNumber);
+						 	 
+						 	 
+						 	 //加载数据
+							  putProductDataByCatid(datajson.categorylist[event.detail.slideNumber-1].category_id,event.detail.slideNumber)
+								
+					 	  
+						 	itemshows[event.detail.slideNumber-1] = true;
+						 	
+						 }
+						 
+						 
+						 
+						});
+					 
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					//循环初始化所有下拉刷新，上拉加载。
+					mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+						 
+						
+						muipullrefresh(pullRefreshEl);
+					});
+					 
+					 
+					 function muipullrefresh(pullRefreshEl){
+					 	mui(pullRefreshEl).pullToRefresh({
+							down: {
+								callback: function() {
+									var self = this;
+									console.log($(self.element).attr('id'));
+									setTimeout(function() {
+										 
+										//首页的下拉刷新
+										/*var html = template('index', datajson);
+										document.getElementById('scroll1').innerHTML = html;
+										hrefclick();*/
+										
+										
+										var scrollid  = $(self.element).attr('id');
+										if(scrollid == 'scroll1'){
+											//首页的上拉加载
+											var html = template('index', datajson);
+											document.getElementById('scroll1').innerHTML = html;
+											indexpage = 1;
+											hrefclick();
+
+											 
+										}else{
+											var proindex = parseInt(scrollid.substring(scrollid.length-1)) ;
+											putProductDataByCatid(datajson.categorylist[proindex-1].category_id  ,proindex); 
+											for (var i = 0; i < propage.length; i++) {
+											  	 propage[i] = 1;
+									    	}
+										}
+										
+													//*********************************//
+													 
+										muipullrefresh(pullRefreshEl);
+										/*var cw = plus.webview.currentWebview();
+										cw.reload();*/
+										self.endPullDownToRefresh();
+									}, 1000);
+								}
+							},
+							up: {
+								callback: function() {
+									var self = this;
+									setTimeout(function() {
+										/*var ul = self.element.querySelector('.mui-table-view');
+										ul.appendChild(createFragment(ul, index, 5));*/
+										var scrollid  = $(self.element).attr('id');
+										if(scrollid == 'scroll1'){
+											//首页的上拉加载
+//											alert();
+											
+											IndexPullUpToRefresh();
+										}else{
+											
+											var proindex = parseInt(scrollid.substring(scrollid.length-1)) ;
+//											alert(proindex);
+											ProductPullUpToRefresh(proindex);
+										}
+										
+										
+										self.endPullUpToRefresh();
+									}, 1000);
+								}
+							}
+						});
+					 }
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					
+					 /*
+					  *
+					  * 首页上拉加载
+					  * */
+					 
+					  indexpage = 1;
+					 function IndexPullUpToRefresh(){
+					 	
+					 	var lis = [];
+					 	$.ajax({
+							type:"post",
+							url:netconfig.netname+"app/goods/getGoodslist",
+							data:{
+								page:++indexpage,
+								size:3
+							},
+							success:function  (res) {
+								res = eval('(' + res + ')');
+//								console.log( res);
+								//假设你的列表返回在data集合中,异步加载商品数据
+							$.each(res.data, function(index, item) {
+								var listring = '<li>'+
+								'<a href="detail.html?goodsid='+item.goods_id+'">'+
+									'<div class="groups-img"><img  src="'+netconfig.netname+item.pic_cover_mid+'" /></div>'+
+									'<h2 class="groups-title">'+item.goods_name+'</h2>'+
+									'<div class="groups-detail">'+
+										'<div class="groups-detail-left fl">'+
+											'<div class="price fl"><i>￥</i>'+item.group_price+'</div>'+
+											'<div class="des fr">已团100万件</div>'+
+										'</div>'+
+										'<div class="groups-detail-right fr">'+
+											'<div class="group-local fl">'+
+												'<div class="avatar fr"><img src="../images/t1.jpg" /></div>'+
+												'<div class="avatar fr"><img src="../images/t2.jpg" /></div>'+
+											'</div>'+
+											'<div class="group-btn fr">'+
+												'<a href="#">去开团 ></a>'+
+											'</div>'+
+										'</div>'+
+									'</div>'+
+								'</a>'+
+							'</li>';
+								lis.push(listring);
+							});
+
+							 $('#scroll1').find('.groups').append(lis);//插入
+							 hrefclick();
+							 
+							}
+						});
+					 
+					 }
+					 
+					 
+					 
+					 
+					 /*
+					  *
+					  * 产品页上拉加载
+					  * */
+					 
+					  propage = new Array(datajson.categorylist.length);
+					  for (var i = 0; i < propage.length; i++) {
+					  	 propage[i] = 1;
+					  }
+					 console.log(propage);
+					 function ProductPullUpToRefresh(proindex){
+//					 	alert();
+					 	var prolis = [];
+					 	$.ajax({
+							type:"post",
+							url:netconfig.netname+"app/goods/getGoodslist",
+							data:{
+								page:++propage[proindex-1],
+								size:2,
+								'category_id': datajson.categorylist[proindex].category_id ,
+							},
+							success:function  (res) {
+								res = eval('(' + res + ')');
+								console.log( res);
+								//假设你的列表返回在data集合中,异步加载商品数据
+							$.each(res.data, function(index, item) {
+								var listring = '<div class="mui-col-sm-6 mui-col-xs-6">'+
+		            '<li class="mui-table-view-cell">'+
+		               ' <a class="mui-navigate-right" href="detail.html?goodsid='+item.goods_id+'">'+
+		                    ' <div class="like-img"><img  src="'+netconfig.netname + item.pic_cover_mid+'"/></div>'+
+		                    ' <h2 class="like-text">'+item.goods_name+'</h2>'+
+		                     '<div class="like-price">'+
+		                     	'<span class="fl">¥'+item.group_price+'</span>'+
+   		                     '</div>'+
+		                '</a>'+
+		            '</li>'+
+		        '</div>';
+								prolis.push(listring);
+							});
+							
+							 $('#scrollp'+proindex).find('.progroups').append(prolis);//插入
+							 hrefclick('#scrollp'+proindex);
+
+							 
+							}
+						});
+					 
+					 }
+					 
+						var first = null;
+						mui.back = function() {
+		
+								//首页返回键处理
+								//处理逻辑：1秒内，连续两次按返回键，则退出应用；
+								//首次按键，提示‘再按一次退出应用’
+//								 alert(1);
+								if (!first) {
+								
+										first = new Date().getTime();
+		//								alert(first);
+										mui.toast('再按一次退出应用');
+										setTimeout(function() {
+										first = null;
+									 }, 1000);
+								} else {
+										
+										if (new Date().getTime() - first < 1000) {
+											mui.toast('退出应用');
+											plus.runtime.quit();
+								
+									}
+								
+								}
+		
+						};
+						
+						
+						 
+						 
+						
+					 
+					 
+				});
+				
+				
+				 
+				
+			});
+		</script>
+	</body>
+
+</html>

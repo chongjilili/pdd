@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <title>拼团商城</title>
+	    <meta name="keywords" content="拼团商城" />
+	    <meta name="description" content="拼团商城" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <script type="text/javascript" src="../js/jquery-2.1.4.js" ></script>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/template-web.js" ></script>
+		<script type="text/javascript" src="../js/mytool.js" ></script>
+		<script type="text/javascript" src="../js/common.js" ></script>
+		 
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	    <link rel="stylesheet" href="../css/swiper.css" />
+	    <script type="text/javascript">
+	        !function(J){function H(){var d=E.getBoundingClientRect().width;var e=(d/7.5>100*B?100*B:(d/7.5<42?42:d/7.5));E.style.fontSize=e+"px",J.rem=e}var G,F=J.document,E=F.documentElement,D=F.querySelector('meta[name="viewport"]'),B=0,A=0;if(D){var y=D.getAttribute("content").match(/initial\-scale=([\d\.]+)/);y&&(A=parseFloat(y[1]),B=parseInt(1/A))}if(!B&&!A){var u=(J.navigator.appVersion.match(/android/gi),J.navigator.appVersion.match(/iphone/gi)),t=J.devicePixelRatio;B=u?t>=3&&(!B||B>=3)?3:t>=2&&(!B||B>=2)?2:1:1,A=1/B}if(E.setAttribute("data-dpr",B),!D){if(D=F.createElement("meta"),D.setAttribute("name","viewport"),D.setAttribute("content","initial-scale="+A+", maximum-scale="+A+", minimum-scale="+A+", user-scalable=no"),E.firstElementChild){E.firstElementChild.appendChild(D)}else{var s=F.createElement("div");s.appendChild(D),F.write(s.innerHTML)}}J.addEventListener("resize",function(){clearTimeout(G),G=setTimeout(H,300)},!1),J.addEventListener("pageshow",function(b){b.persisted&&(clearTimeout(G),G=setTimeout(H,300))},!1),H()}(window);
+	        if (typeof(M) == 'undefined' || !M){
+	            window.M = {};
+	        }
+	         
+	    </script>
+	    <script type="text/javascript">
+	    	 
+				    
+				mui.back = function() {
+					    
+						back(); 
+				};
+			 
+		 
+	    	var datajson = getAssignDataJson(netconfig.netname + "app/goods/goodsDetail", {
+					id: (typeof(getArgs()['goodsid']) == 'undefined' ) ? 382 : getArgs()['goodsid']
+				});
+			var datajson = $.extend({}, datajson, netconfig); //合并参数
+			console.log(datajson);
+			
+			function collecttoggle(){
+					//商品收藏
+//						 console.log(datajson.goods_detail.collects);
+					var is_member_fav_goods =  (datajson.goods_detail.collects == 1 ? 1 : 0);
+					// 添加收藏
+					$(".collect-goods").on('tap',function(event) {
+						event.preventDefault();
+//						alert();
+						var obj = $(this).find(".mui-icon-star");
+						if(is_member_fav_goods == 0) {
+							//点击收藏
+							$.ajax({
+								url: netconfig.netname + "app/components/collectiongoodsorshop",
+								type: "post",
+								data: {
+									"fav_id": datajson.goods_detail.goods_id,
+									"fav_type": "goods",
+									"log_msg": datajson.goods_detail.goods_name
+								},
+								success: function(data) {
+									data = eval('(' + data + ')');
+									console.log((data) );
+									if(data.code > 0) {
+										is_member_fav_goods = 1;
+										 
+										obj.css("color", 'red');
+										 
+									} else {
+										mui.toast("您已经收藏该商品");
+									}
+								 
+								}
+							});
+						} else if(is_member_fav_goods == 1) {
+							//取消收藏
+							$.ajax({
+								url: netconfig.netname +"app/components/cancelcollgoodsorShop",
+								type: "post",
+								data: {
+									"fav_id": datajson.goods_detail.goods_id,
+									"fav_type": "goods",
+									"log_msg": datajson.goods_detail.goods_name
+								},
+								success: function(data) {
+									data = eval('(' + data + ')');
+									console.log((data) );
+									
+									if(data.code > 0) {
+										 obj.css("color", '#909090');
+										is_member_fav_goods = 0;
+									} else {
+										mui.toast("您已经取消收藏该商品");
+									}
+								}
+							});
+						} else {
+							location.href = netconfig.netname +"login/index";
+						}
+					});
+			}
+			
+			
+			
+			 
+	    </script>
+	</head>
+	<body>
+		<!--图片轮播-->
+		<div id="slider" class="mui-slider" >
+		<script id="sliderbanner" type="text/html">
+				
+			  <div class="mui-slider-group mui-slider-loop">
+			  
+			  <div class="mui-slider-item mui-slider-item-duplicate">
+			      <a href="#"> <img src="{{netname}}{{goods_detail.img_list[goods_detail.img_list.length-1].pic_cover_big}}"> </a>
+			    </div>
+			    
+			     {{each goods_detail.img_list banner si }}
+			    <div class="mui-slider-item">
+			      <a href="#"> <img src="{{netname}}{{banner.pic_cover_big}}"> </a>
+			    </div>
+			    {{/each}} 
+			    
+			    <div class="mui-slider-item mui-slider-item-duplicate">
+			      <a href="#"><img src="{{netname}}{{goods_detail.img_list[0].pic_cover_big}}"> </a>
+			    </div>
+			  </div>
+			  <div class="mui-slider-indicator">
+			  {{each goods_detail.img_list banner si }}
+			  	  {{if si < 1 }}
+			  
+			    	<div class="mui-indicator mui-active"></div>
+			    	 {{else}} 
+			    	 <div class="mui-indicator "></div>
+			     {{/if}}
+			    
+			   {{/each}} 
+			    
+			    
+			  </div>
+			
+		</script>
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				var html = template('sliderbanner', datajson);
+	//			console.log(html);
+				document.getElementById('slider').innerHTML = html;
+				hrefclick();
+			})
+			
+		</script>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<div id="basicbox">
+			<script id="basicmsg" type="text/html">
+			<div class="g-price" v-cloak>
+				<span class="fl money">￥{{goods_detail.group_price}}</span>
+				<del class="fl delmoney">￥{{goods_detail.market_price}}</del>
+				<i class="fr num">累计销量：1200件</i>
+		</div>
+			<div class="g-desc" v-cloak>
+				<h2>{{goods_detail.goods_name}}</h2>
+				<p>{{goods_detail.introduction}}</p>
+				<p>支付开团并邀请<i>1</i>人参团，人数不足自动退款</p>
+			</div>
+			
+			
+		<!--最近的团购-->
+		<h2 class="nearbg-title">以下小伙伴正在发起团购，您可以直接参与</h2>
+		<!--最近开团1-->
+		<div class="nearby-group-detail">
+			<div class="nearbg-img"><img src="../images/t1.jpg"/></div>
+			<div class="nearbg-btn">
+				<div class="nearbg-infor">
+					<div class="owner fl">王丽</div>
+					<div class="num fr">还差1人成团</div>
+				</div>
+				<div class="nearbg-infor">
+					<div class="owner fl">上海</div>
+					<div class="num fr clock" ></div>
+				</div>
+			</div>
+			<div class="nearbg-canquan">
+				<span>去参团</span>
+				<div class="qucan-tuan-arrow"></div>
+			</div>			
+		</div>
+		<!--最近开团2-->
+		<div class="nearby-group-detail">
+			<div class="nearbg-img"><img src="../images/t1.jpg"/></div>
+			<div class="nearbg-btn">
+				<div class="nearbg-infor">
+					<div class="owner fl">王丽</div>
+					<div class="num fr">还差1人成团</div>
+				</div>
+				<div class="nearbg-infor">
+					<div class="owner fl">上海</div>
+					<div class="num fr clock"></div>
+				</div>
+			</div>
+			<div class="nearbg-canquan">
+				<span>去参团</span>
+				<div class="qucan-tuan-arrow"></div>
+			</div>			
+		</div>
+		<!--店铺信息-->
+		<div class="g-mall-infor">
+			<div class="g-mall-logo fl">
+				<img src="../images/t2.jpg" />
+			</div>
+			<div class="g-mall-name fl">
+				<span>魔霸旗舰店</span>
+				<p>销量：123456</p>
+			</div>
+			<div class="g-mall-btn fr">进店逛逛</div>
+		</div>
+			
+		</script>
+		</div>
+		
+		
+		
+		<script type="text/javascript">
+			$(function(){
+				var html = template('basicmsg', datajson);
+	//			console.log(html);
+				document.getElementById('basicbox').innerHTML = html;
+				hrefclick();
+			})
+			
+		</script>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<!-- 商品详情 -->
+		<div class="g-mall-content" id="g-mall-content" >
+			 
+			
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				/*var html = template('gcontent', datajson);
+				console.log($.trim(html) );*/
+				document.getElementById('g-mall-content').innerHTML =  datajson.goods_detail.description;
+				$('.g-mall-content').find('table,img,div').css({
+						display: 'block',
+						maxWidth: '100%',
+						width: 'auto !important',
+						height: 'auto !important'
+
+					});
+				hrefclick();
+			})
+			
+		</script>
+		
+		
+		
+		
+	<div id="bottombox">
+		<script id="bottommsg" type="text/html">
+			<!--固定在底部的按钮-->
+		<div class="mb-50"></div>
+		<div class="fix-mall-btn">
+			<div class="fix-mall-index fl">
+				<a href="index.html">
+					 
+					<span class="mui-icon mui-icon-home"></span>
+				 
+					<p>首页</p>
+				</a>
+				<a href="javacsript:;" class="collect collect-goods">
+					 
+					{{if goods_detail.collects == 1 }}
+					<span class="mui-icon mui-icon-star" style="color: #e02e24;"></span>
+					{{else}}
+					<span class="mui-icon mui-icon-star"></span>
+					{{/if}}
+					<p>收藏</p>
+				</a>
+			</div>
+			<div class="fix-buy-btn fr" style="background: #ff947a;">
+				<p>{{goods_detail.group_price}}</p>
+				<p>2人团</p>
+			</div>
+			<div class="fix-buy-btn fr" style="background: #ff5943;">
+				<p>单独购买</p>
+				<p>{{goods_detail.promotion_price}}</p>
+			</div>
+		</div>
+		<!--选择商品属性弹出框-->
+		<div class="mui-backdrop"></div>
+		<div class="g-detail">
+			<div class="g-detail-top">
+				<div class="g-detail-close"><img src="../images/quit_button.png"/></div>
+				<div class="g-top-img fl"><img src="../images/goods.jpg"/></div>
+				<div class="g-top-info fl">
+					<h2>{{goods_detail.goods_name}}</h2>
+						<p class="price">￥{{goods_detail.group_price}}</p>
+						<p class="select">请选择颜色尺码</p>
+				</div>
+			</div>
+			<div class="g-detail-color">
+				<h2>颜色</h2>
+				<ul>
+					<li class="current">玫红</li>
+					<li>黑色</li>
+					<li>酒红</li>
+					<li>粉色</li>
+				</ul>
+			</div>
+			<div class="g-detail-size">
+				<h2>尺码</h2>
+				<ul>
+					<li class="current">S</li>
+					<li>M</li>
+					<li>L</li>
+					<li>XL</li>
+					<li>2XL</li>
+					<li>3XL</li>
+				</ul>
+			</div>
+			<div class="g-detail-num">
+				<h2 class="fl">购买数量</h2>
+				<div class="fr">
+	                <div class="mui-numbox" data-numbox-min='0'>
+					  <button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+					  <input class="mui-numbox-input" type="number" />
+					  <button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+					</div>
+		         </div>
+	         </div>
+            <div class="g-detail-btn">
+            	<button type="button">确定</button>
+            </div>
+		</div>
+		</script>
+	</div>	
+		
+		<script type="text/javascript">
+			$(function(){
+				var html = template('bottommsg', datajson);
+				 
+				document.getElementById('bottombox').innerHTML =  html;
+				 collecttoggle();
+				 
+			})
+			
+		</script>
+		
+		
+		<script src="../js/jquery-2.1.4.js"></script>
+	    <script src="../js/swiper.min.js"></script>
+	    <script type="text/javascript" src="../js/comment.js" ></script>
+	    <script type="text/javascript" src="../js/jquery.countdown.min.js" ></script>
+	    <script type="text/javascript">
+			$(function(){
+				var twoDaysFromNow = new Date().valueOf() + 2 * 24 * 60 * 60 * 1000;
+				$('.clock').countdown(twoDaysFromNow, function(event) {
+				  var totalHours = event.offset.totalDays * 24 + event.offset.hours;
+				  $(this).html(event.strftime(totalHours + '  : %M : %S'));
+				});
+			})
+		</script>
+        <script>
+			
+		</script>
+
+	</body>
+</html>

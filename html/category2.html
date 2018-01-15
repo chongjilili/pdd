@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>拼团商城</title>
+    <meta name="keywords" content="拼团商城" />
+    <meta name="description" content="拼团商城" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+   	<!--引用-->
+	<script type="text/javascript" src="../js/jquery-2.1.4.js" ></script>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/template-web.js" ></script>
+		<script type="text/javascript" src="../js/mytool.js" ></script>
+		<script type="text/javascript" src="../js/common.js" ></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+
+		<!--引用-->
+    <script type="text/javascript"> 
+        !function(J){function H(){var d=E.getBoundingClientRect().width;var e=(d/7.5>100*B?100*B:(d/7.5<42?42:d/7.5));E.style.fontSize=e+"px",J.rem=e}var G,F=J.document,E=F.documentElement,D=F.querySelector('meta[name="viewport"]'),B=0,A=0;if(D){var y=D.getAttribute("content").match(/initial\-scale=([\d\.]+)/);y&&(A=parseFloat(y[1]),B=parseInt(1/A))}if(!B&&!A){var u=(J.navigator.appVersion.match(/android/gi),J.navigator.appVersion.match(/iphone/gi)),t=J.devicePixelRatio;B=u?t>=3&&(!B||B>=3)?3:t>=2&&(!B||B>=2)?2:1:1,A=1/B}if(E.setAttribute("data-dpr",B),!D){if(D=F.createElement("meta"),D.setAttribute("name","viewport"),D.setAttribute("content","initial-scale="+A+", maximum-scale="+A+", minimum-scale="+A+", user-scalable=no"),E.firstElementChild){E.firstElementChild.appendChild(D)}else{var s=F.createElement("div");s.appendChild(D),F.write(s.innerHTML)}}J.addEventListener("resize",function(){clearTimeout(G),G=setTimeout(H,300)},!1),J.addEventListener("pageshow",function(b){b.persisted&&(clearTimeout(G),G=setTimeout(H,300))},!1),H()}(window);
+        if (typeof(M) == 'undefined' || !M){
+            window.M = {};
+        }
+    </script>
+    
+</head>
+<body>
+	<!--图片轮播-->
+	 
+	
+	<script type="text/javascript">
+		
+//			console.log(typeof(getArgs()['category_id']) == 'undefined' );
+			var datajson = getAssignDataJson(netconfig.netname+"app/goods/goodslist",{
+				category_id:(typeof(getArgs()['category_id']) == 'undefined' ) ? 311 : getArgs()['category_id'],
+				pid:getArgs()['pid']
+			});
+			var datajson = $.extend({}, datajson, netconfig);//合并参数
+	 			console.log(datajson);
+//	 			console.log(getKeyArr(datajson.category_tree_list[0].child_list,'category_name'));
+			 mui.back = function() {
+//					    
+						back(); 
+			};
+			$(function() {
+			
+			/*layui.use('flow', function() {
+				var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+				var flow = layui.flow;
+				flow.load({
+					elem: '#groups', //指定列表容器
+					done: function(page, next) { //到达临界点（默认滚动触发），触发下一页
+						var lis = [];
+						//以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+						$.ajax({
+							type:"post",
+							url:netconfig.netname+"app/goods/goodslist",
+							data:{
+								page:page,
+								category_id:getArgs()['category_id'],
+								
+							},
+							success:function  (res) {
+								res = eval('(' + res + ')');
+								res = res.goodslist;
+								console.log( res);
+								//假设你的列表返回在data集合中,异步加载商品数据
+							layui.each(res.data, function(index, item) {
+								var listring = '<div class="mui-col-sm-6 mui-col-xs-6">'+
+		            '<li class="mui-table-view-cell">'+
+		               ' <a class="mui-navigate-right" href="detail.html">'+
+		                    ' <div class="like-img"><img  src="'+netconfig.netname + item.pic_cover_mid+'"/></div>'+
+		                    ' <h2 class="like-text">'+item.goods_name+'</h2>'+
+		                     '<div class="like-price">'+
+		                     	'<span class="fl">¥'+item.group_price+'</span>'+
+   		                     '</div>'+
+		                '</a>'+
+		            '</li>'+
+		        '</div>';
+								lis.push(listring);
+							});
+
+							//执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+							//pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+							next(lis.join(''), page < res.page_count);
+							}
+						});
+					 
+					}
+				});
+			});*/
+			
+		});
+	</script>
+	<div id="app">
+		
+	
+	<!--滚动菜单-->
+	<div id="list-menu"  class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+	    <div class="mui-scroll" id="scrollmenu">
+	    	
+	    	 <script type="text/html" id="scrollmenuscr">
+	        <a class="mui-control-item mui-active" href="category.html?category_id={{pid}}">全部  </a>
+	        
+	       	{{each catlist cat cati}}
+	       <a class="mui-control-item" href="category.html?category_id={{cat.category_id}}&pid={{pid}}">{{cat.category_name}}</a>
+	        	{{/each}}
+	        	</script>
+	    </div>
+	    <script>
+							 
+								var html = template('scrollmenuscr', datajson);
+								document.getElementById('scrollmenu').innerHTML = html;
+							 	hrefclick('#scrollmenu');
+	
+						</script>
+		        
+	</div>
+	
+    <div class="mui-content like">
+		    
+		    
+		    
+		    <div class="mui-row" id="groups">
+		        
+		       <script type="text/html" id="goods">
+		       		 {{each goodslist.data good i}}
+		        <div class="mui-col-sm-6 mui-col-xs-6">
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" href="detail.html?goodsid={{good.goods_id}}">
+		                     <div class="like-img"><img src="{{netname}}{{good.pic_cover_mid}}"/></div>
+		                     <h2 class="like-text">{{good.goods_name}}</h2>
+		                     <div class="like-price">
+		                     	<span class="fl">¥{{good.group_price}}</span>
+		                     	<em class="fr">已团2220件</em>
+		                     	<!--<button class="fr" type="button">参团 ></button>-->
+		                     </div>
+		                </a>
+		            </li>
+		        </div>
+		         {{/each}}
+		       	
+		       </script>
+		           
+		         
+					<script>
+							 
+								var html = template('goods', datajson);
+								document.getElementById('groups').innerHTML = html;
+							 	hrefclick('#groups' );
+	
+	
+						</script>
+		        
+		         
+		    </div>
+		     
+		     
+		     
+		</div>
+ 
+	 </div>
+	     <script src="../js/swiper.min.js"></script>
+    <script type="text/javascript" src="../js/comment.js" ></script>
+   
+    	
+</body>
+</html>
